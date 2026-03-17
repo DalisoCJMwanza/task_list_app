@@ -48,6 +48,28 @@ def complete_task():
     print("Task marked as completed.\n")
 
 
+# ✅ NEW DELETE FUNCTION
+def delete_task():
+    if len(tasks) == 0:
+        print("No tasks available to delete.\n")
+        return
+
+    view_tasks()
+
+    try:
+        num = int(input("Enter task number to delete: "))
+
+        if num < 1 or num > len(tasks):
+            print("Invalid task number.\n")
+            return
+
+        removed_task = tasks.pop(num - 1)
+        print(f"Task '{removed_task['name']}' deleted successfully!\n")
+
+    except ValueError:
+        print("Please enter a valid number.\n")
+
+
 while True:
 
     print("===== Task List Menu =====")
@@ -55,7 +77,8 @@ while True:
     print("2. View Tasks")
     print("3. Search Task")
     print("4. Complete Task")
-    print("5. Exit")
+    print("5. Delete Task")
+    print("6. Exit")
 
     choice = input("Choose option: ")
 
@@ -72,6 +95,9 @@ while True:
         complete_task()
 
     elif choice == "5":
+        delete_task()
+
+    elif choice == "6":
         print("Exiting program.")
         break
 
