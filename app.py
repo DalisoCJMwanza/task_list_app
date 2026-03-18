@@ -1,16 +1,43 @@
+from datetime import datetime, timedelta
+
 tasks = []
+
+def get_next_due_date(due_date_str, repeat):
+    due = datetime.strptime(due_date_str, "%Y-%m-%d")
+    if repeat == "daily":
+        due += timedelta(days=1)
+    elif repeat == "weekly":
+        due += timedelta(weeks=1)
+    elif repeat == "monthly":
+        month = due.month + 1
+        year = due.year
+        if month > 12:
+            month = 1
+            year += 1
+        due = due.replace(year=year, month=month)
+    return due.strftime("%Y-%m-%d")
+
 
 def add_task():
     name = input("Enter task name: ")
-    due_date = input("Enter due date: ")
+    due_date = input("Enter due date (YYYY-MM-DD): ")
     priority = input("Enter priority (High/Medium/Low): ")
-    status = "Pending"
+    print("Is this a recurring task?")
+    print("  1. No")
+    print("  2. Daily")
+    print("  3. Weekly")
+    print("  4. Monthly")
+    repeat_choice = input("Choose option: ")
+
+    repeat_map = {"1": "none", "2": "daily", "3": "weekly", "4": "monthly"}
+    repeat = repeat_map.get(repeat_choice, "none")
 
     task = {
         "name": name,
         "due_date": due_date,
         "priority": priority,
-        "status": status
+        "status": "Pending",
+        "repeat": repeat
     }
 
     tasks.append(task)
@@ -23,10 +50,11 @@ def view_tasks():
         return
 
     for i, task in enumerate(tasks):
+        repeat_label = f" | Repeats: {task['repeat'].capitalize()}" if task["repeat"] != "none" else ""
         print(f"{i+1}. {task['name']}")
         print(f"   Due Date: {task['due_date']}")
         print(f"   Priority: {task['priority']}")
-        print(f"   Status: {task['status']}\n")
+        print(f"   Status: {task['status']}{repeat_label}\n")
 
 
 def search_task():
@@ -44,11 +72,24 @@ def search_task():
 def complete_task():
     view_tasks()
     num = int(input("Enter task number to mark as completed: "))
-    tasks[num-1]["status"] = "Completed"
+    task = tasks[num - 1]
+    task["status"] = "Completed"
     print("Task marked as completed.\n")
 
+    # If recurring, automatically create the next occurrence
+    if task["repeat"] != "none":
+        next_due = get_next_due_date(task["due_date"], task["repeat"])
+        new_task = {
+            "name": task["name"],
+            "due_date": next_due,
+            "priority": task["priority"],
+            "status": "Pending",
+            "repeat": task["repeat"]
+        }
+        tasks.append(new_task)
+        print(f"Recurring task rescheduled! Next due date: {next_due}\n")
 
-# ✅ NEW DELETE FUNCTION
+
 def delete_task():
     if len(tasks) == 0:
         print("No tasks available to delete.\n")
