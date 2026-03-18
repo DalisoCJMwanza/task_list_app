@@ -6,9 +6,11 @@ This is a simple Python Task List application developed to demonstrate collabora
 ## Features Implemented
 - Add tasks
 - Due dates for tasks
+- Reoccuring task implementation
 - Priority levels (High, Medium, Low)
 - Search tasks
 - Mark tasks as completed
+- Deleting tasks
 
 ## Technologies Used
 - Python
@@ -17,6 +19,8 @@ This is a simple Python Task List application developed to demonstrate collabora
 
 ## Git Workflow Used
 Each feature was implemented in a separate branch:
+- Due dates
+- Delete task
 - feature-due-dates
 - feature-search
 - feature-priority
@@ -33,4 +37,6 @@ python app.py
 Then follow the menu options to manage tasks.
 
 ## Author
+Wongani Nyirongo
+Kudzai Mungeya
 Daliso C Mwanza
